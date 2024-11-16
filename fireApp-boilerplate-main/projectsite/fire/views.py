@@ -42,6 +42,8 @@ def PieCountbySeverity(request):
     else:
         data = {}
 
+    print(data)  # Debug log
+
     return JsonResponse(data)
 
 def LineCountbyMonth(request):

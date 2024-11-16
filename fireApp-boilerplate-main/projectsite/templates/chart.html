@@ -126,7 +126,7 @@
 <script>
     function loadChartData() {
       // pieChart
-      fetch("/chart/")
+      fetch("{% url 'pie-chart' %}")
         .then((response) => response.json())
         .then((data) => {
           var severityLevels = Object.keys(data);
@@ -178,7 +178,7 @@
         })
         .catch((error) => console.error("Error:", error));
         // lineChart
-fetch("/lineChart/")
+fetch("{% url 'line-chart' %}")
   .then((response) => response.json())
   .then((result_with_month_names) => {
     var months = Object.keys(result_with_month_names);
@@ -233,7 +233,7 @@ fetch("/lineChart/")
   })
   .catch((error) => console.error("Error:", error));
   // multiLine
-fetch("/multilineChart/")
+fetch("{% url 'multiline-chart' %}")
   .then((response) => response.json())
   .then((result_with_month_names) => {
     var countries = Object.keys(result_with_month_names);
@@ -338,7 +338,7 @@ fetch("/multilineChart/")
   })
   .catch((error) => console.error("Error:", error));
   
-  fetch("/multiBarChart/")
+  fetch("{% url 'multibar-chart' %}")
   .then((response) => response.json())
   .then((result) => {
     var severitylevel = Object.keys(result);
