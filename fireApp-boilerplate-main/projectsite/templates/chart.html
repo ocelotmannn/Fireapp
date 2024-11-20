@@ -367,13 +367,16 @@ fetch("{% url 'multiline-chart' %}")
       incidentCount_minor = sortedKeys2.map((key) => sl2_data[key]);
     }
     if (severitylevel.length >= 3) {
-      var sl3_data = result[severitylevel[2]];
-      var sortedKeys3 = sortObjectKeys(sl3_data);
-      incidentCount_moderate = sortedKeys3.map((key) => sl3_data[key]);
-    }
+  var sl3_data = result[severitylevel[2]];
+  var sortedKeys3 = sortObjectKeys(sl3_data);
+  incidentCount_moderate = sortedKeys3.map((key) => sl3_data[key]);
+} else {
+  incidentCount_moderate = []; // Fallback if no data
+}
 
     var multipleBarChart = document.getElementById("multipleBarChart").getContext("2d");
 
+    
     new Chart(multipleBarChart, {
       type: "bar",
       data: {
