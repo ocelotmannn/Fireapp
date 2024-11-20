@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from fire.models import Locations, Incident
+from fire.models import Locations, Incident, FireStation
 from django.db import connection
 from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
@@ -171,4 +171,21 @@ def multipleBarbySeverity(request):
 
     return JsonResponse(result)
 
-
+def map_station(request):
+    fireStations = FireStation.objects.values('name', 'latitude', 'longitude')
+    
+    # Convert latitude and longitude to floats
+    fireStations_list = [
+        {
+            'name': fs['name'],
+            'latitude': float(fs['latitude']),
+            'longitude': float(fs['longitude']),
+        }
+        for fs in fireStations
+    ]
+    
+    context = {
+        'fireStations': fireStations_list,
+    }
+    
+    return render(request, 'map_station.html', context)
