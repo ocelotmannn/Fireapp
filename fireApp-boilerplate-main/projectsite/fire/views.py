@@ -9,6 +9,11 @@ from django.db.models import Count
 from datetime import datetime
 
 
+from .models import Incident
+
+
+
+
 
 class HomePageView(ListView):
     model = Locations
@@ -189,3 +194,30 @@ def map_station(request):
     }
     
     return render(request, 'map_station.html', context)
+
+
+
+def map_incidents(request):
+    incidents = Incident.objects.select_related('location').values(
+        'location__name', 'location__latitude', 'location__longitude', 
+        'date_time', 'severity_level', 'description'
+    )
+
+    # Format the incident data for the template
+    incidents_list = [
+        {
+            'name': incident['location__name'],
+            'latitude': float(incident['location__latitude']),
+            'longitude': float(incident['location__longitude']),
+            'date_time': incident['date_time'].strftime('%Y-%m-%d %H:%M:%S') if incident['date_time'] else 'N/A',
+            'severity_level': incident['severity_level'],
+            'description': incident['description'],
+        }
+        for incident in incidents
+    ]
+
+    context = {
+        'fireIncidents': incidents_list,
+    }
+
+    return render(request, 'map_incidents.html', context)

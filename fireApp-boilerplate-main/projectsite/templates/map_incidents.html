@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Dashboard</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="#">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Maps</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Fire Incidents</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-transparent">
+                <div class="card-header">
+                    <h4 class="card-title text-center">Fire Incidents</h4>
+                    <p class="card-category text-center">
+                        Fire incidents visualized on an interactive map using data from 
+                        <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.
+                    </p>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-10 ml-auto mr-auto">
+                        <div id="map" style="width: 100%; height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    var map = L.map('map').setView([9.81644, 118.72239], 13);
+
+    var severityIcons = {
+        "Minor Fire": L.icon({
+            iconUrl: "{% static 'img/minor_fire.png' %}",
+            iconSize: [30, 30],
+        }),
+        "Moderate Fire": L.icon({
+            iconUrl: "{% static 'img/moderate_fire.png' %}",
+            iconSize: [40, 40],
+        }),
+        "Major Fire": L.icon({
+            iconUrl: "{% static 'img/major_fire.png' %}",
+            iconSize: [50, 50],
+        }),
+    };
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    var markers = [];
+    var markerData = {{ fireIncidents|safe }};
+
+    markerData.forEach(function (data) {
+        var latitude = parseFloat(data.latitude);
+        var longitude = parseFloat(data.longitude);
+        var marker = L.marker([latitude, longitude], { 
+            icon: severityIcons[data.severity_level] 
+        }).addTo(map);
+
+        var popupContent = `
+            <strong>${data.name}</strong><br>
+            Severity: ${data.severity_level}<br>
+            Date: ${data.date_time}<br>
+            Description: ${data.description}
+        `;
+        marker.bindPopup(popupContent);
+        marker.on('mouseover', function () {
+            this.openPopup();
+        });
+        marker.on('mouseout', function () {
+            this.closePopup();
+        });
+        markers.push(marker);
+    });
+</script>
+{% endblock %}
