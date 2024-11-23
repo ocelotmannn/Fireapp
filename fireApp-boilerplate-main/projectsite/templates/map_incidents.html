@@ -39,6 +39,16 @@
                 </div>
                 <div class="card-body">
                     <div class="col-md-10 ml-auto mr-auto">
+                        <!-- Dropdown for city filtering -->
+                        <div class="form-group">
+                            <label for="cityFilter">Filter by City:</label>
+                            <select id="cityFilter" class="form-control">
+                                <option value="">Show All</option>
+                                <option value="Rio Tuba">Rio Tuba</option>
+                                <option value="Brooke's Point">Brooke's Point</option>
+                                <option value="Quezon">Quezon</option>
+                            </select>
+                        </div>
                         <div id="map" style="width: 100%; height: 400px"></div>
                     </div>
                 </div>
@@ -62,25 +72,40 @@
 
     var markers = [];
     var markerData = [
-    {latitude: 	8.5345620000000000, longitude: 117.4324930000000000, name: "Rio Tuba"},
-    {latitude: 8.7787390000000000, longitude: 117.8364620000000000, name: "Brooke's Point"},
-    {latitude: 9.2185360000000000, longitude: 117.9372610000000000, name: "Quezon"}
-];
+        {latitude: 8.534562, longitude: 117.432493, name: "Rio Tuba"},
+        {latitude: 8.778739, longitude: 117.836462, name: "Brooke's Point"},
+        {latitude: 9.218536, longitude: 117.937261, name: "Quezon"}
+    ];
 
+    // Add markers to the map
+    function addMarkers(data) {
+        markers.forEach(function (marker) {
+            map.removeLayer(marker);
+        });
+        markers = [];
+        data.forEach(function (item) {
+            var latitude = parseFloat(item.latitude);
+            var longitude = parseFloat(item.longitude);
+            var marker = L.marker([latitude, longitude], { icon: fireIcon }).addTo(map);
+            marker.bindPopup(item.name);
+            markers.push(marker);
+        });
+    }
 
-    markerData.forEach(function (data) {
-        var latitude = parseFloat(data.latitude);
-        var longitude = parseFloat(data.longitude);
-        var marker = L.marker([latitude, longitude], { icon: fireIcon }).addTo(map);
-        var popupContent = data.name;
-        marker.bindPopup(popupContent);
-        marker.on('mouseover', function () {
-            this.openPopup();
-        });
-        marker.on('mouseout', function () {
-            this.closePopup();
-        });
-        markers.push(marker);
+    // Initial marker population
+    addMarkers(markerData);
+
+    // Filter functionality
+    document.getElementById('cityFilter').addEventListener('change', function () {
+        var selectedCity = this.value;
+        if (selectedCity) {
+            var filteredData = markerData.filter(function (item) {
+                return item.name === selectedCity;
+            });
+            addMarkers(filteredData);
+        } else {
+            addMarkers(markerData);
+        }
     });
 </script>
 {% endblock %}
