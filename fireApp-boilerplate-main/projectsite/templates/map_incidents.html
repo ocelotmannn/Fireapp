@@ -71,11 +71,7 @@
     }).addTo(map);
 
     var markers = [];
-    var markerData = [
-        {latitude: 8.534562, longitude: 117.432493, name: "Rio Tuba"},
-        {latitude: 8.778739, longitude: 117.836462, name: "Brooke's Point"},
-        {latitude: 9.218536, longitude: 117.937261, name: "Quezon"}
-    ];
+    var markerData = {{ fireIncidents|safe }};
 
     // Add markers to the map
     function addMarkers(data) {

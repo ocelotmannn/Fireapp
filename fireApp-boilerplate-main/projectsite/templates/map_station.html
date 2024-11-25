@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
 <div class="page-inner">
     <div class="page-header">
         <h4 class="page-title">Dashboard</h4>
@@ -26,16 +25,12 @@
             </li>
         </ul>
     </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="card card-transparent">
                 <div class="card-header">
                     <h4 class="card-title text-center">Fire Stations</h4>
-                    <p class="card-category text-center">
-                        Looks great on any resolution. Made by our
-                        friends from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.
-                    </p>
+                    <p class="card-category text-center">Looks great on any resolution. Made by our friends from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.</p>
                 </div>
                 <div class="card-body">
                     <div class="col-md-10 ml-auto mr-auto">
@@ -46,41 +41,40 @@
         </div>
     </div>
 </div>
-
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-    var map = L.map('map').setView([9.81644, 118.72239], 13);
+  var map = L.map('map').setView([9.81644, 118.72239], 13);
+  var truckIcon = L.icon({
+    iconUrl: '../static/img/firetruck.png', // Replace with the path to your red marker icon
+    iconSize: [50, 50], // Adjust the size as needed
+  });
 
-    var truckIcon = L.icon({
-        iconUrl: "{% static 'img/firetruck.png' %}",
-        iconSize: [50, 50],
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var markers = [];
+  var markerData = {{ fireStations|safe }};
+
+  markerData.forEach(function (data) {
+    var latitude = parseFloat(data.latitude);
+    var longitude = parseFloat(data.longitude);
+
+    var marker = L.marker([latitude, longitude], { icon: truckIcon }).addTo(map);
+    var popupContent = data.name;
+    var popup = L.popup().setContent(popupContent);
+
+    marker.bindPopup(popupContent);
+
+    marker.on('mouseover', function (e) {
+        this.openPopup();
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
-
-    var markers = [];
-    var markerData = [
-    {latitude: 9.83369118406607, longitude: 118.72275445554, name: "Sta. Lourdes"},
-    {latitude: 9.79555573875096, longitude: 118.710565836493, name: "Sicsican"},
-    {latitude: 9.82084079557777, longitude: 118.74401369655, name: "Tagburos"}
-];
-
-
-    markerData.forEach(function (data) {
-        var latitude = parseFloat(data.latitude);
-        var longitude = parseFloat(data.longitude);
-        var marker = L.marker([latitude, longitude], { icon: truckIcon }).addTo(map);
-        var popupContent = data.name;
-        marker.bindPopup(popupContent);
-        marker.on('mouseover', function () {
-            this.openPopup();
-        });
-        marker.on('mouseout', function () {
-            this.closePopup();
-        });
-        markers.push(marker);
+    marker.on('mouseout', function (e) {
+        this.closePopup();
     });
+
+    markers.push(marker);
+  });
 </script>
 {% endblock %}

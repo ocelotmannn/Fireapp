@@ -178,46 +178,38 @@ def multipleBarbySeverity(request):
 
 def map_station(request):
     fireStations = FireStation.objects.values('name', 'latitude', 'longitude')
-    
-    # Convert latitude and longitude to floats
-    fireStations_list = [
-        {
-            'name': fs['name'],
-            'latitude': float(fs['latitude']),
-            'longitude': float(fs['longitude']),
-        }
-        for fs in fireStations
-    ]
-    
+
+    for fs in fireStations:
+        fs['latitude'] = float(fs['latitude'])
+        fs['longitude'] = float(fs['longitude'])
+
+    fireStations_list = list(fireStations)
+
     context = {
         'fireStations': fireStations_list,
     }
-    
+
     return render(request, 'map_station.html', context)
 
 
 
+
 def map_incidents(request):
-    incidents = Incident.objects.select_related('location').values(
-        'location__name', 'location__latitude', 'location__longitude', 
-        'date_time', 'severity_level', 'description'
+    fireIncidents = Incident.objects.select_related('location').values(
+        'location__name', 'location__latitude', 'location__longitude'
     )
 
-    # Format the incident data for the template
-    incidents_list = [
+    fireIncidents_list = [
         {
             'name': incident['location__name'],
             'latitude': float(incident['location__latitude']),
             'longitude': float(incident['location__longitude']),
-            'date_time': incident['date_time'].strftime('%Y-%m-%d %H:%M:%S') if incident['date_time'] else 'N/A',
-            'severity_level': incident['severity_level'],
-            'description': incident['description'],
         }
-        for incident in incidents
+        for incident in fireIncidents
     ]
 
     context = {
-        'fireIncidents': incidents_list,
+        'fireIncidents': fireIncidents_list,
     }
 
     return render(request, 'map_incidents.html', context)
