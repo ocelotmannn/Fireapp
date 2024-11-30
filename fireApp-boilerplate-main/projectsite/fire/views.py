@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from fire.forms import FireStationForm
+from fire.forms import FireStationForm, FireTruckForm, FireFighterForm
 from django.urls import reverse_lazy 
-from fire.models import Locations, Incident, FireStation
+from fire.models import Locations, Incident, FireStation, FireTruck, Firefighters
 from django.db import connection
 from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
@@ -240,5 +240,55 @@ class FireStationDelete(DeleteView):
     model = FireStation
     template_name = 'firestation_del.html'
     success_url = reverse_lazy('firestation-list')
+
+#########################################################
+
+class FireTruckList(ListView):
+    model = FireTruck
+    context_object_name = 'firetruck'
+    template_name = 'firetruck_list.html'
+    paginate = 5
+
+class FireTruckCreate(CreateView):
+    model = FireTruck
+    form_class = FireTruckForm
+    template_name = 'firetruck_add.html'
+    success_url = reverse_lazy('firetruck-list')
+
+class FireTruckUpdate(UpdateView):
+    model = FireTruck
+    form_class = FireTruckForm
+    template_name = 'firetruck_edit.html'
+    success_url = reverse_lazy('firetruck-list')
+
+class FireTruckDelete(DeleteView):
+    model = FireTruck
+    template_name = 'firetruck_del.html'
+    success_url = reverse_lazy('firetruck-list')
+
+############################################################
+
+class FireFighterList(ListView):
+    model = Firefighters
+    context_object_name = 'firefighter'
+    template_name = 'firefighter_list.html'
+    paginate = 5
+
+class FireFighterCreate(CreateView):
+    model = Firefighters
+    form_class = FireFighterForm
+    template_name = 'firefighter_add.html'
+    success_url = reverse_lazy('firefighter-list')
+
+class FireFighterUpdate(UpdateView):
+    model = Firefighters
+    form_class = FireFighterForm
+    template_name = 'firefighter_edit.html'
+    success_url = reverse_lazy('firefighter-list')
+
+class FireFighterDelete(DeleteView):
+    model = Firefighters
+    template_name = 'firefighter_del.html'
+    success_url = reverse_lazy('firefighter-list')
 
 
