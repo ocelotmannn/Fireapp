@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from fire.forms import FireStationForm
+from django.urls import reverse_lazy 
 from fire.models import Locations, Incident, FireStation
 from django.db import connection
 from django.http import JsonResponse
@@ -213,3 +216,29 @@ def map_incidents(request):
     }
 
     return render(request, 'map_incidents.html', context)
+
+
+class FireStationList(ListView):
+    model = FireStation
+    context_object_name = 'firestation'
+    template_name = 'firestation_list.html'
+    paginate = 5
+
+class FireStationCreate(CreateView):
+    model = FireStation
+    form_class = FireStationForm
+    template_name = 'firestation_add.html'
+    success_url = reverse_lazy('firestation-list')
+
+class FireStationUpdate(UpdateView):
+    model = FireStation
+    form_class = FireStationForm
+    template_name = 'firestation_edit.html'
+    success_url = reverse_lazy('firestation-list')
+
+class FireStationDelete(DeleteView):
+    model = FireStation
+    template_name = 'firestation_del.html'
+    success_url = reverse_lazy('firestation-list')
+
+
