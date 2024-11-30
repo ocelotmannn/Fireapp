@@ -16,7 +16,7 @@
   <div class="col-md-6">
     <form class="navbar-left navbar-form nav-search mr-md-3" action="">
       <div class="input-group">
-        <input type="text" placeholder="Search ..." class="form-control" />
+        <input type="text" placeholder="Search ..." class="form-control" name="q"/>
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="la la-search search-icon"></i>
@@ -28,7 +28,7 @@
   <div class="col-md-6">
     <div class="pull-right">
       <a href="{% url 'firefighter-add' %}" class="btn btn-success btn-rounded">
-        Add Fire Station
+        Add Fire Fighter
       </a>
     </div>
   </div>
@@ -42,6 +42,7 @@
                    <th scope="col">Rank</th>
                    <th scope="col">Experience Level</th>
                    <th scope="col">Station</th>
+                   <th scope="col">Action</th> 
                  </tr>
                </thead>
                <tbody>

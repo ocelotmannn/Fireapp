@@ -5,6 +5,9 @@ from fire.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyM
 
 from fire.views import FireTruckList, FireTruckCreate, FireTruckUpdate, FireTruckDelete
 from fire.views import FireFighterList, FireFighterCreate, FireFighterUpdate, FireFighterDelete
+from fire.views import IncidentList, IncidentCreate, IncidentUpdate, IncidentDelete
+from fire.views import LocationList, LocationCreate, LocationUpdate, LocationDelete
+from fire.views import WeatherConditionList, WeatherConditionCreate, WeatherConditionUpdate, WeatherConditionDelete
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -31,5 +34,20 @@ urlpatterns = [
     path('firefighter_add', FireFighterCreate.as_view(), name='firefighter-add'),
     path('firefighter_list/<pk>', FireFighterUpdate.as_view(), name='firefighter-update'),
     path('firefighter_list/<pk>/delete', FireFighterDelete.as_view(), name='firefighter-delete'),
+
+    path('incident_list', IncidentList.as_view(), name='incident-list'),
+    path('incident_add', IncidentCreate.as_view(), name='incident-add'),
+    path('incident_list/<pk>', IncidentUpdate.as_view(), name='incident-update'),
+    path('incident_list/<pk>/delete', IncidentDelete.as_view(), name='incident-delete'),
+
+    path('location_list', LocationList.as_view(), name='location-list'),
+    path('location_add', LocationCreate.as_view(), name='location-add'),
+    path('location_list/<pk>', LocationUpdate.as_view(), name='location-update'),
+    path('location_list/<pk>/delete', LocationDelete.as_view(), name='location-delete'),
+
+    path('weathercondition_list', WeatherConditionList.as_view(), name='weathercondition-list'),
+    path('weathercondition_add', WeatherConditionCreate.as_view(), name='weathercondition-add'),
+    path('weathercondition_list/<pk>', WeatherConditionUpdate.as_view(), name='weathercondition-update'),
+    path('weathercondition_list/<pk>/delete', WeatherConditionDelete.as_view(), name='weathercondition-delete'),
 
 ]
